@@ -62,6 +62,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>transaction-statistics</finalName>
 	</build>
 
 </project>
