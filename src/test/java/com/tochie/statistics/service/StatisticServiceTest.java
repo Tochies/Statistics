@@ -4,30 +4,18 @@ import com.tochie.statistics.dto.TransactionDTO;
 import com.tochie.statistics.dto.TransactionResponse;
 import com.tochie.statistics.model.Statistic;
 import com.tochie.statistics.repository.StatisticRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
-import org.mockito.junit.MockitoRule;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -55,9 +43,7 @@ class StatisticServiceTest {
     }
 
     @Test
-    void statistic()  {
-
-
+    void createStaticsInvalidDataTest()  {
         TransactionDTO transactionDTO = new TransactionDTO();
 
         HttpStatus statistic = statisticService.statistic(transactionDTO);
@@ -68,12 +54,31 @@ class StatisticServiceTest {
         HttpStatus statistic2 = statisticService.statistic(transactionDTO);
         Assertions.assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, statistic2);
 
+    }
+
+    @Test
+    void createStaticsOldTransactionTest()  {
+
+
+        TransactionDTO transactionDTO = new TransactionDTO();
+
         Instant instant = Instant.ofEpochMilli ( System.currentTimeMillis() );
         transactionDTO.setAmount("168.090");
         transactionDTO.setTimestamp(instant.toString());
         HttpStatus statistic3 = statisticService.statistic(transactionDTO);
         Assertions.assertEquals(HttpStatus.NO_CONTENT, statistic3);
 
+
+
+
+
+    }
+
+    @Test
+    void createStatisticSuccess()  {
+
+
+        TransactionDTO transactionDTO = new TransactionDTO();
 
         Date date = new Date();
         transactionDTO.setAmount("168.090");
@@ -85,13 +90,17 @@ class StatisticServiceTest {
     }
 
     @Test()
-    void getStatistics() {
+    void getStatisticsFailed() {
         Mockito.doReturn(Collections.EMPTY_LIST).when(statisticRepository).findAll();
         TransactionResponse statistics1 = statisticService.getStatistics();
 
         assertEquals(0, statistics1.getCount());
         Assertions.assertNull(statistics1.getAvg());
 
+    }
+
+    @Test()
+    void getStatisticsSuccess() {
 
         Mockito.doReturn(statisticCollection()).when(statisticRepository).findAll();
         TransactionResponse statistics = statisticService.getStatistics();
@@ -103,8 +112,8 @@ class StatisticServiceTest {
         Assertions.assertNotNull(statistics.getMax());
         Assertions.assertNotNull(statistics.getMin());
 
-
     }
+
 
     @Test
     void delete() {

@@ -1,9 +1,10 @@
-package com.tochie.statistics.resource;
+package com.tochie.statistics.controller;
 
 import com.tochie.statistics.dto.TransactionDTO;
 import com.tochie.statistics.dto.TransactionResponse;
 import com.tochie.statistics.service.StatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.json.JsonParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,8 +29,12 @@ public class StatisticController {
         try {
             HttpStatus response =  statisticService.statistic(transactionDTO);
             return new ResponseEntity<>(response);
-        } catch (Exception e){
+        } catch (JsonParseException e){
+
             return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        } catch (Exception e){
+            return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -44,11 +49,8 @@ public class StatisticController {
 
             return new ResponseEntity<>(ans, HttpStatus.OK);
         } catch (Exception e){
-            return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-
-
     }
 
     @DeleteMapping("/transactions")
@@ -58,11 +60,11 @@ public class StatisticController {
             HttpStatus response =  statisticService.delete();
             return new ResponseEntity<>(response);
         } catch (Exception e){
-            return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @GetMapping("/test")
+    @GetMapping("/ping")
     public String test(){
         return "Service is up";
     }

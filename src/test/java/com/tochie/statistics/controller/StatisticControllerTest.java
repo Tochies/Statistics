@@ -1,4 +1,4 @@
-package com.tochie.statistics.resource;
+package com.tochie.statistics.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tochie.statistics.dto.TransactionDTO;
@@ -37,7 +37,7 @@ class StatisticControllerTest {
 
 
     @Test
-    void createStatistic() throws Exception {
+    void createStatisticSuccess() throws Exception {
 
         mvc.perform( MockMvcRequestBuilders
                 .post("/transactions")
@@ -48,7 +48,7 @@ class StatisticControllerTest {
     }
 
     @Test
-    void getStatistic() throws Exception {
+    void getStatisticFailed() throws Exception {
 
         mvc.perform( MockMvcRequestBuilders
                 .get("/statistics")
@@ -58,6 +58,10 @@ class StatisticControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.count").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.sum").isEmpty());
 
+    }
+
+    @Test
+    void getStatisticSuccess() throws Exception {
 
         mvc.perform( MockMvcRequestBuilders
                 .post("/transactions")
@@ -74,12 +78,14 @@ class StatisticControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.sum").isNotEmpty());
     }
 
+
     @Test
     void deleteStatistics() throws Exception {
 
         mvc.perform( MockMvcRequestBuilders.delete("/transactions") )
                 .andExpect(status().isNoContent());
     }
+
 
     static String asJsonString(final Object obj) {
         try {

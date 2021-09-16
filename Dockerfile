@@ -12,4 +12,4 @@ ENTRYPOINT ["java", "-jar", "transaction-statistics.jar"]
 #
 # Then run the container using:
 #
-# docker run -i --rm -p 8080:8080 quarkus/autotopup-sochitel-jvm
+# docker run -i --rm -p 8082:8082 transaction-statistics
