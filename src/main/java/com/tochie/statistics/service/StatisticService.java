@@ -62,7 +62,7 @@ public class StatisticService {
 
         statisticRepository.save(statistic);
 
-        return HttpStatus.ACCEPTED;
+        return HttpStatus.CREATED;
     }
 
 

@@ -42,7 +42,7 @@ public class StatisticResource {
         try {
             TransactionResponse ans = statisticService.getStatistics();
 
-            return new ResponseEntity<>(ans, HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(ans, HttpStatus.OK);
         } catch (Exception e){
             return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

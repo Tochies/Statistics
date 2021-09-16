@@ -80,7 +80,7 @@ class StatisticServiceTest {
         transactionDTO.setTimestamp(sdf.format(date));
 
         HttpStatus statistic4 = statisticService.statistic(transactionDTO);
-        Assertions.assertEquals(HttpStatus.ACCEPTED, statistic4);
+        Assertions.assertEquals(HttpStatus.CREATED, statistic4);
 
     }
 
