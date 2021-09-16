@@ -10,7 +10,6 @@ import java.sql.Timestamp;
 @ToString
 @Getter
 @Setter
-
 public class Statistic {
 
     private Integer id;
@@ -18,5 +17,15 @@ public class Statistic {
     private BigDecimal amount;
 
     private Timestamp timestamp;
+
+    public Statistic() {
+    }
+
+    public Statistic(Integer id, BigDecimal amount, Timestamp timestamp) {
+        this.id = id;
+        this.amount = amount;
+        this.timestamp = timestamp;
+    }
+
 
 }

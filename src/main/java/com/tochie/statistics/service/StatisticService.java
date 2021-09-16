@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class StatisticService {
 
     @Autowired
-    StatisticRepository statisticRepository;
+    private StatisticRepository statisticRepository;
 
 
 
@@ -45,14 +45,14 @@ public class StatisticService {
         LocalDateTime transactionTime = odt.toLocalDateTime();
 
         if(transactionTime.isAfter(LocalDateTime.now())){
-            log.error("is time in future is {}",transactionTime.isAfter(LocalDateTime.now()));
+            log.debug("is time in future is {}",transactionTime.isAfter(LocalDateTime.now()));
             return HttpStatus.UNPROCESSABLE_ENTITY;
         }
 
         long dif = ChronoUnit.SECONDS.between(odt.toLocalDateTime(),LocalDateTime.now());
 
         if(dif > 30 ){
-            log.error("time dif is greater than 30 sec, time dif is {}",dif);
+            log.debug("time dif is greater than 30 sec, time dif is {}",dif);
             return HttpStatus.NO_CONTENT;
         }
 
