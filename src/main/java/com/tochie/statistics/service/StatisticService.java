@@ -7,6 +7,7 @@ import com.tochie.statistics.repository.StatisticRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,9 @@ public class StatisticService {
     @Autowired
     private StatisticRepository statisticRepository;
 
+    @Value("${statistics-transaction-age}")
+    private Integer transactionAge = 30;
+
 
     /**
      * HttpStatus statistic(TransactionDTO transactionDTO)
@@ -53,7 +57,7 @@ public class StatisticService {
      * ● 400 – if the JSON is invalid
      * ● 422 – if any of the fields are not parsable or the transaction date is in the future
      */
-    public HttpStatus statistic(TransactionDTO transactionDTO){
+    public HttpStatus saveStatistics(TransactionDTO transactionDTO){
 
         if (!NumberUtils.isParsable(transactionDTO.getAmount()) || !isDateValid(transactionDTO.getTimestamp())){
             return HttpStatus.UNPROCESSABLE_ENTITY;
@@ -73,7 +77,7 @@ public class StatisticService {
 
         long transactionTimeDifference = ChronoUnit.SECONDS.between(odt.toLocalDateTime(),LocalDateTime.now());
 
-        if(transactionTimeDifference > 30 ){
+        if(transactionTimeDifference > transactionAge ){
             log.debug("time dif is greater than 30 sec, time dif is {}",transactionTimeDifference);
             return HttpStatus.NO_CONTENT;
         }
@@ -114,7 +118,7 @@ public class StatisticService {
         }
 
         List<BigDecimal> transactions = all.stream()
-                .filter(c -> ChronoUnit.SECONDS.between(c.getTimestamp().toLocalDateTime(), LocalDateTime.now()) <= 30)
+                .filter(c -> ChronoUnit.SECONDS.between(c.getTimestamp().toLocalDateTime(), LocalDateTime.now()) <= transactionAge)
                 .map(Statistic::getAmount)
                 .sorted()
                 .collect(Collectors.toList());
@@ -140,7 +144,7 @@ public class StatisticService {
      * deletes all transactions added within the application life time
      */
 
-    public HttpStatus delete(){
+    public HttpStatus deleteStatistics(){
         statisticRepository.delete();
 
         return HttpStatus.NO_CONTENT;

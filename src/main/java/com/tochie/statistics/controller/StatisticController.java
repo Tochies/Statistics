@@ -27,7 +27,7 @@ public class StatisticController {
     public ResponseEntity<HttpStatus> createStatistic(@RequestBody TransactionDTO transactionDTO){
 
         try {
-            HttpStatus response =  statisticService.statistic(transactionDTO);
+            HttpStatus response =  statisticService.saveStatistics(transactionDTO);
             return new ResponseEntity<>(response);
         } catch (JsonParseException e){
 
@@ -57,7 +57,7 @@ public class StatisticController {
     public ResponseEntity<HttpStatus> deleteStatistics(){
 
         try {
-            HttpStatus response =  statisticService.delete();
+            HttpStatus response =  statisticService.deleteStatistics();
             return new ResponseEntity<>(response);
         } catch (Exception e){
             return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

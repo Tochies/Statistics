@@ -16,6 +16,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -46,12 +47,12 @@ class StatisticServiceTest {
     void createStaticsInvalidDataTest()  {
         TransactionDTO transactionDTO = new TransactionDTO();
 
-        HttpStatus statistic = statisticService.statistic(transactionDTO);
+        HttpStatus statistic = statisticService.saveStatistics(transactionDTO);
         Assertions.assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, statistic);
 
         transactionDTO.setAmount("12s");
         transactionDTO.setTimestamp("2021-09-16T12:03:25.312Z");
-        HttpStatus statistic2 = statisticService.statistic(transactionDTO);
+        HttpStatus statistic2 = statisticService.saveStatistics(transactionDTO);
         Assertions.assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, statistic2);
 
     }
@@ -64,13 +65,9 @@ class StatisticServiceTest {
 
         Instant instant = Instant.ofEpochMilli ( System.currentTimeMillis() );
         transactionDTO.setAmount("168.090");
-        transactionDTO.setTimestamp(instant.toString());
-        HttpStatus statistic3 = statisticService.statistic(transactionDTO);
+        transactionDTO.setTimestamp(instant.minus(5, ChronoUnit.MINUTES).toString());
+        HttpStatus statistic3 = statisticService.saveStatistics(transactionDTO);
         Assertions.assertEquals(HttpStatus.NO_CONTENT, statistic3);
-
-
-
-
 
     }
 
@@ -84,7 +81,7 @@ class StatisticServiceTest {
         transactionDTO.setAmount("168.090");
         transactionDTO.setTimestamp(sdf.format(date));
 
-        HttpStatus statistic4 = statisticService.statistic(transactionDTO);
+        HttpStatus statistic4 = statisticService.saveStatistics(transactionDTO);
         Assertions.assertEquals(HttpStatus.CREATED, statistic4);
 
     }
@@ -118,7 +115,7 @@ class StatisticServiceTest {
     @Test
     void delete() {
 
-        statisticService.delete();
+        statisticService.deleteStatistics();
 
         Mockito.verify(statisticRepository, Mockito.times(1)).delete();
     }
