@@ -71,10 +71,10 @@ public class StatisticService {
             return HttpStatus.UNPROCESSABLE_ENTITY;
         }
 
-        long dif = ChronoUnit.SECONDS.between(odt.toLocalDateTime(),LocalDateTime.now());
+        long transactionTimeDifference = ChronoUnit.SECONDS.between(odt.toLocalDateTime(),LocalDateTime.now());
 
-        if(dif > 30 ){
-            log.debug("time dif is greater than 30 sec, time dif is {}",dif);
+        if(transactionTimeDifference > 30 ){
+            log.debug("time dif is greater than 30 sec, time dif is {}",transactionTimeDifference);
             return HttpStatus.NO_CONTENT;
         }
 
